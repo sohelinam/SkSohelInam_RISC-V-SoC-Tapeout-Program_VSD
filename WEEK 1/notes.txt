@@ -1,0 +1,97 @@
+Synthesizer
+Tool used for converting the RTL to netlist
+Yosys is the synthesizer used in this course
+
+read verilog
+/
+Design -----> Yosys -----> netlist file ----> write_verilog
+.lib ---------|
+\
+read_liberty
+
+Verify the synthesis
+NETLIST
+            =====> iverilog=======> vcd file ----->gtkwave (should be same as output observed during RTL simulation)
+TESTBENCH
+
+The set of primary inputs /  primary outputs will remain same between the RTL design and the sythesized netlist ===> same testbench can be used.
+
+RTL design
+-RTL design
+ --Behavioural representation of the required speicification
+
+module sample_code ( 
+input clk, rst, 
+output result, done);
+
+always @ (posedge clk, posedge rst)
+if (rst)
+---
+else
+---
+endmodule
+--------
+--------
+
+Synthesis
+
+-RTL to Gate level
+translation
+
+-The design is converted into gates and the connections are made between
+--This is given out as a file called netlist
+
+What is .lib
+
+.lib
+-collection of logical modules.
+-includes basic gates like And, Or, Not etc.
+-Different flavors of the same gate
+-2 input And gate
+-Slow
+-Medium
+-Fast
+
+-3 input And gate
+-Slow
+-Medium
+-Fast
+
+-4 input And gate
+
+Why do we need different flavours of gate
+
+- Combinational delay in logic path determines the maximum speed of operation of logic circuit
+-So we need cells that work fast toTcomi small
+`Are faster cells sufficient?
+
+Tclk > Tcq_q + Tcombi + Tsetup_b
+
+
+Why do we need slow cells?
+
+-To ensure there are no "HOLD" issues at DFF_B , we need cells work slowly
+-Hence we need cells that work fast to meet the required performance and we need cells that work slow to meet HOLD
+-The collection forms the .lib
+
+Faster Cells vs Slower Cells
+-Load in Digital Logic circuit -> Capacitance
+-Faster the charging / discharging of capacitance -> Lesser the cell delay
+
+---To charge/discharge the capacitance fast, we need transistors capable of sourcing more current
+---Wider transistors -> Low delay -> More area and power as well!!
+---Narrow transistors-> More Dely -> Less area and Power
+---Faster cells do not come free, they come at penality of area and power.
+
+Selection of cells
+
+-Need to guide the synthesizer to select the flavor of ceells that is optimum for the implementation of logiv circuit
+-More use of faster cells
+--Bad cicruit in terms of power and area
+---Hold time violations
+
+-More use of slower cells
+--Sluggish circuit, may not meet the performance need
+- The guidance offered to the sythesizer --> "Constraints"
+
+Synthesis (illustration)
